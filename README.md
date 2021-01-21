@@ -21,3 +21,14 @@ Postman Collections Backup
 #### "Get HX Cluster Info" request will fill the "hx_cluster_name" and "hx_cluster_uuid" variable values. 
 #### "node_uuid" variable needs to manually specified for "entermaintenancemode" and "exitmaintenancemode" requests. 
 
+
+### cimc.postman_collection.json
+#### Collection of Cisco IMC API calls. 
+
+#### Create following variables with values: 
+    - imc_ip
+    - imc_user
+    - imc_passwd
+
+#### Create below Variables with empty values: 
+    - XAuthToken
