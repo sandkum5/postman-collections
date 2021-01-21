@@ -1,7 +1,7 @@
 # postman-collections
 Postman Collections Backup
 
-### HX-API.postman_collection.json
+### hx-api.postman_collection.json
 #### Collection of HX API calls. 
 
 #### Create following variables with values: 
