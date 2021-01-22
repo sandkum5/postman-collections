@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "0b01b9cf-122e-4ad8-be35-7c2cdf1340b4",
-		"name": "CIMC",
+		"name": "cimc",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -14,6 +14,16 @@
 						"exec": [
 							"let XAuthToken = postman.getResponseHeader(\"X-Auth-Token\")",
 							"postman.setEnvironmentVariable(\"XAuthToken\", XAuthToken)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.add({key: 'Content-Type', value: 'application/json' })",
+							"pm.request.headers.add({key: 'Accept-Charset', value: 'utf-8' })"
 						],
 						"type": "text/javascript"
 					}
@@ -30,12 +40,14 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json",
-						"type": "text"
+						"type": "text",
+						"disabled": true
 					},
 					{
 						"key": "Accept-Charset",
 						"value": "utf-8",
-						"type": "text"
+						"type": "text",
+						"disabled": true
 					}
 				],
 				"body": {
