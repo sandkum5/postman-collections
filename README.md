@@ -32,3 +32,12 @@ Postman Collections Backup
 
 ##### Create below Variables with empty values: 
     - XAuthToken
+
+
+### ucs-central.postman_collection.json
+#### Collection of Cisco UCS Central XML API calls. 
+
+##### Create following variables with values: 
+    - central_ip
+    - central_user
+    - central_passwd

@@ -30,7 +30,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "<aaaLogin inName={{central_user}} inPassword={{central_password}}/>",
+					"raw": "<aaaLogin inName={{central_user}} inPassword={{central_passwd}}/>",
 					"options": {
 						"raw": {
 							"language": "xml"
