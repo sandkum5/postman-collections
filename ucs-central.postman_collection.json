@@ -1,0 +1,203 @@
+{
+	"info": {
+		"_postman_id": "24ff9f16-9cf1-4974-9374-3dda6a11926d",
+		"name": "UCS_Central",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);",
+							"pm.environment.set(\"outCookie\", responseJson.aaaLogin.$.outCookie);",
+							"console.log(responseJson.aaaLogin.$.outCookie);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"user-agent": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<aaaLogin inName={{central_user}} inPassword={{central_password}}/>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{central_ip}}/xmlIM/",
+					"protocol": "https",
+					"host": [
+						"{{central_ip}}"
+					],
+					"path": [
+						"xmlIM",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Management IP",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<configResolveClass\n  cookie=\"{{outCookie}}\"\n  classId=\"trigTokenRequestor\"\n  inHierarchical=\"true\">\n  <inFilter>\n    <eq class=\"trigTokenRequestor\" property=\"triggerableDn\" value=\"org-root/ls-api11/ack\"/>\n  </inFilter>\n  <inSortProps>\n  </inSortProps>\n</configResolveClass>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{central_ip}}/xmlIM/central-mgr",
+					"protocol": "https",
+					"host": [
+						"{{central_ip}}"
+					],
+					"path": [
+						"xmlIM",
+						"central-mgr"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Service-Profiles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);",
+							"console.log(responseJson.configResolveChildren.outConfigs.lsServer[1].$.dn);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<configResolveChildren\ncookie=\"{{outCookie}}\"\nclassId=\"lsServer\"\ninDn=\"org-root\"\ninHierarchical=\"false\">\n  <inFilter>\n    <eq class=\"lsServer\" property=\"type\" value=\"instance\"/>\n  </inFilter>\n</configResolveChildren>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{central_ip}}/xmlIM/central-mgr",
+					"protocol": "https",
+					"host": [
+						"{{central_ip}}"
+					],
+					"path": [
+						"xmlIM",
+						"central-mgr"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Single Service-Profiles Details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);",
+							"console.log(responseJson.configResolveDn.outConfig.lsServer.$);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<configResolveDn\ndn=\"org-root/ls-api11\"\ncookie=\"{{outCookie}}\"\ninHierarchical=\"false\">\n</configResolveDn>\n",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{central_ip}}/xmlIM/central-mgr",
+					"protocol": "https",
+					"host": [
+						"{{central_ip}}"
+					],
+					"path": [
+						"xmlIM",
+						"central-mgr"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Profile OOB KVM IP",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);",
+							"console.log(responseJson.configResolveChildren.outConfigs.vnicIpV4PooledAddr.$.addr);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<configResolveChildren\ncookie=\"{{outCookie}}\"\nclassId=\"vnicIpV4PooledAddr\"\ninDn=\"org-root/ls-api11\"\ninHierarchical=\"false\"\ninReturnCountOnly=\"false\">\n    <inFilter>\n    </inFilter>\n</configResolveChildren>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{central_ip}}/xmlIM/central-mgr",
+					"protocol": "https",
+					"host": [
+						"{{central_ip}}"
+					],
+					"path": [
+						"xmlIM",
+						"central-mgr"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
