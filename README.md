@@ -4,12 +4,12 @@ Postman Collections Backup
 ### hx-api.postman_collection.json
 #### Collection of HX API calls. 
 
-##### Create following variables with values: 
+##### Create following Environment variables with values: 
     - hx_ip
     - hx_user
     - hx_passwd
 
-##### Create below Variables with empty values: 
+##### Create below Environment variables with empty values: 
     - access_token
     - refresh_token
     - token_type
@@ -25,19 +25,27 @@ Postman Collections Backup
 ### cimc.postman_collection.json
 #### Collection of Cisco IMC API calls. 
 
-##### Create following variables with values: 
+##### Create following Environment variables with values: 
     - imc_ip
     - imc_user
     - imc_passwd
 
-##### Create below Variables with empty values: 
+##### Create below Environment variables with empty values: 
     - XAuthToken
 
 
 ### ucs-central.postman_collection.json
 #### Collection of Cisco UCS Central XML API calls. 
 
-##### Create following variables with values: 
+##### Create following Environment variables with values: 
     - central_ip
     - central_user
     - central_passwd
+
+
+### intersight-oauth2.postman_collection.json
+#### Collection of Cisco Intersight API calls using OAuth2 Token.
+
+##### Create following Environment variables with values: 
+    - oauth_user
+    - oauth_passwd
