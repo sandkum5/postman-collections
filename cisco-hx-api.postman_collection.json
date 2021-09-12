@@ -1,0 +1,649 @@
+{
+	"info": {
+		"_postman_id": "3c0180d9-e72a-418b-8498-c45265463102",
+		"name": "HX-API",
+		"description": "Collection of API calls to Hyperflex",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Obtain Access Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+							"postman.setEnvironmentVariable(\"refresh_token\", jsonData.refresh_token);",
+							"postman.setEnvironmentVariable(\"token_type\", jsonData.token_type);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"username\": \"{{hx_user}}\", \"password\": \"{{hx_passwd}}\" }"
+				},
+				"url": {
+					"raw": "https://{{hx_ip}}/aaa/v1/auth?grant_type=password",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"aaa",
+						"v1",
+						"auth"
+					],
+					"query": [
+						{
+							"key": "grant_type",
+							"value": "password"
+						}
+					]
+				},
+				"description": "Sends a post request with username and password in data"
+			},
+			"response": []
+		},
+		{
+			"name": "Validate Access Token",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"access_token\": \"{{access_token}}\",\n    \"scope\": \"READ\",\n    \"token_type\": \"{{token_type}}\"\n}"
+				},
+				"url": {
+					"raw": "https://{{hx_ip}}/aaa/v1/validate",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"aaa",
+						"v1",
+						"validate"
+					]
+				},
+				"description": "To validate if the existing access token is valid"
+			},
+			"response": []
+		},
+		{
+			"name": "Get HX Cluster Info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"hx_cluster_name\", jsonData[0].name);",
+							"postman.setEnvironmentVariable(\"hx_cluster_uuid\", jsonData[0].uuid);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/clusters",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"clusters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Controller VMs Info",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/hypervisor/controllervms",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"hypervisor",
+						"controllervms"
+					]
+				},
+				"description": "Get the following CtlrVM Info: \nuuid, dataIp, mgmtIp, hxdpDisplayVersion, role, state, diskcount "
+			},
+			"response": []
+		},
+		{
+			"name": "Get Hypervisor Info",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/hypervisor/hosts",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"hypervisor",
+						"hosts"
+					]
+				},
+				"description": "Get ESXi host Info: \nuuid, hypervisor, modelNumber, serialNumber, hostName, ip/ip, displayVersion, status, role"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Cluster Health",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/clusters/{{hx_cluster_uuid}}/health",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"clusters",
+						"{{hx_cluster_uuid}}",
+						"health"
+					]
+				},
+				"description": "Health and resiliency information of cluster. Provides the data health status and ability of the HX storage cluster to tolerate failures."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Cluster Status",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/clusters/{{hx_cluster_uuid}}/status",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"clusters",
+						"{{hx_cluster_uuid}}",
+						"status"
+					]
+				},
+				"description": "Cluster status"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Cluster Utilization Stats",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/clusters/{{hx_cluster_uuid}}/stats",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"clusters",
+						"{{hx_cluster_uuid}}",
+						"stats"
+					]
+				},
+				"description": "Cluster statistics [Space Savings, Capacity]"
+			},
+			"response": []
+		},
+		{
+			"name": "Enter Node Maintenance Mode ",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"evacuateVMs\": true,\n  \"powerOffVMs\": true,\n  \"force\": true,\n  \"timeoutSec\": 0\n}"
+				},
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/clusters/{{hx_cluster_uuid}}/nodes/{{node_uuid}}/entermaintenancemode",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"clusters",
+						"{{hx_cluster_uuid}}",
+						"nodes",
+						"{{node_uuid}}",
+						"entermaintenancemode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Exit Node Maintenance Mode ",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"fallback\": true\n}"
+				},
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/clusters/{{hx_cluster_uuid}}/nodes/{{node_uuid}}/exitmaintenancemode",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"clusters",
+						"{{hx_cluster_uuid}}",
+						"nodes",
+						"{{node_uuid}}",
+						"exitmaintenancemode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Cluster Capability",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/clusters/{{hx_cluster_uuid}}/capability",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"clusters",
+						"{{hx_cluster_uuid}}",
+						"capability"
+					]
+				},
+				"description": "Return Cluster capabilities like encryption, replication etc."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Datastores ",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/clusters/{{hx_cluster_uuid}}/datastores",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"clusters",
+						"{{hx_cluster_uuid}}",
+						"datastores"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Online Disks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/hypervisor/disks?state=ONLINE",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"hypervisor",
+						"disks"
+					],
+					"query": [
+						{
+							"key": "state",
+							"value": "ONLINE"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Offline Disks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/hypervisor/disks?state=OFFLINE",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"hypervisor",
+						"disks"
+					],
+					"query": [
+						{
+							"key": "state",
+							"value": "OFFLINE"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Unknown DIsks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{hx_ip}}/coreapi/v1/hypervisor/disks?state=UNKNOWN",
+					"protocol": "https",
+					"host": [
+						"{{hx_ip}}"
+					],
+					"path": [
+						"coreapi",
+						"v1",
+						"hypervisor",
+						"disks"
+					],
+					"query": [
+						{
+							"key": "state",
+							"value": "UNKNOWN"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "hxuser",
+			"value": "admin"
+		},
+		{
+			"key": "hxpasswd",
+			"value": "p@ssword123"
+		}
+	]
+}

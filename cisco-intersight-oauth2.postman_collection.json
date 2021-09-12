@@ -1,0 +1,213 @@
+{
+	"info": {
+		"_postman_id": "54785d1e-df84-4c75-bc56-25cc91699f88",
+		"name": "Intersight-OAuth2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "AppRegistration: Get Client ID/Secret",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ClientName\": \"oauth-test\",\n  \"ClientType\": \"confidential\",\n  \"Description\": \"Test oauth, # Please make this API call using the Intersight Model Browser: https://intersight.com/apidocs/apirefs/api/v1/iam/AppRegistrations/post/. Once we have a clientId and clientsecret, get an OAuth Token using 'Get OAuth Token' request and use the token to make subsequent API calls like 'Get Audit Logs'. Use Basic auth for 'Get OAuth Token' request and use the clientId as 'user' and clientsecret as 'password'.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://intersight.com/api/v1/iam/AppRegistrations",
+					"protocol": "https",
+					"host": [
+						"intersight",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"iam",
+						"AppRegistrations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get OAuth Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = JSON.parse(responseBody)",
+							"if (responseJson.access_token) {",
+							"    pm.environment.set(\"access_token\", responseJson.access_token)",
+							"}",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{oauth_passwd}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{oauth_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"grant_type\": \"client_credentials\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://intersight.com/iam/token",
+					"protocol": "https",
+					"host": [
+						"intersight",
+						"com"
+					],
+					"path": [
+						"iam",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Audit Logs",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://intersight.com/api/v1/aaa/AuditRecords?$select=Email,Event,MoType,ModTime,Request",
+					"protocol": "https",
+					"host": [
+						"intersight",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"aaa",
+						"AuditRecords"
+					],
+					"query": [
+						{
+							"key": "$select",
+							"value": "Email,Event,MoType,ModTime,Request"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://intersight.com/api/v1/iam/Users",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Requested-With",
+						"value": "XMLHttpRequest",
+						"type": "text"
+					},
+					{
+						"key": "Origin",
+						"value": "https://www.intersight.com",
+						"type": "text"
+					},
+					{
+						"key": "Referer",
+						"value": "https://www.intersight.com/an/iam/users",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://intersight.com/api/v1/iam/Users",
+					"protocol": "https",
+					"host": [
+						"intersight",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"iam",
+						"Users"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
