@@ -41,6 +41,9 @@ Postman Collections Backup
     - central_ip
     - central_user
     - central_passwd
+    - org_dn          
+    - profile_dn 
+
 
 
 ### intersight-oauth2.postman_collection.json
