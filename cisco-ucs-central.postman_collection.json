@@ -30,7 +30,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "<aaaLogin inName={{central_user}} inPassword={{central_passwd}}/>",
+					"raw": "<aaaLogin inName={{central_user}} inPassword={{central_password}}/>",
 					"options": {
 						"raw": {
 							"language": "xml"
@@ -52,13 +52,75 @@
 			"response": []
 		},
 		{
-			"name": "Reset Management IP",
+			"name": "Log-out Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);",
+							"console.log(responseJson.aaaLogout.$.outStatus);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"user-agent": true
+				}
+			},
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "<configResolveClass\n  cookie=\"{{outCookie}}\"\n  classId=\"trigTokenRequestor\"\n  inHierarchical=\"true\">\n  <inFilter>\n    <eq class=\"trigTokenRequestor\" property=\"triggerableDn\" value=\"org-root/ls-api11/ack\"/>\n  </inFilter>\n  <inSortProps>\n  </inSortProps>\n</configResolveClass>",
+					"raw": "<aaaLogout inCookie=\"{{outCookie}}\"/>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{central_ip}}/xmlIM/",
+					"protocol": "https",
+					"host": [
+						"{{central_ip}}"
+					],
+					"path": [
+						"xmlIM",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Org Info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);",
+							"console.log(responseJson.configResolveClass.outConfigs.orgOrg[0].$.dn);",
+							"console.log(responseJson.configResolveClass.outConfigs.orgOrg[1].$.dn);",
+							"console.log(responseJson.configResolveClass.outConfigs.orgOrg[2].$.dn);",
+							"console.log(responseJson.configResolveClass.outConfigs.orgOrg[3].$.dn);",
+							"console.log(responseJson.configResolveClass.outConfigs.orgOrg[4].$.dn);",
+							"console.log(responseJson.configResolveClass.outConfigs.orgOrg[5].$.dn);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<configResolveClass\n  cookie=\"{{outCookie}}\"\n  classId=\"orgOrg\"\n  inHierarchical=\"false\">\n  <inFilter>\n  </inFilter>\n</configResolveClass>",
 					"options": {
 						"raw": {
 							"language": "xml"
@@ -98,7 +160,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "<configResolveChildren\ncookie=\"{{outCookie}}\"\nclassId=\"lsServer\"\ninDn=\"org-root\"\ninHierarchical=\"false\">\n  <inFilter>\n    <eq class=\"lsServer\" property=\"type\" value=\"instance\"/>\n  </inFilter>\n</configResolveChildren>",
+					"raw": "<configResolveChildren\ncookie=\"{{outCookie}}\"\nclassId=\"lsServer\"\ninDn=\"{{org_dn}}\"\ninHierarchical=\"false\">\n  <inFilter>\n    <eq class=\"lsServer\" property=\"type\" value=\"instance\"/>\n  </inFilter>\n</configResolveChildren>",
 					"options": {
 						"raw": {
 							"language": "xml"
@@ -138,7 +200,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "<configResolveDn\ndn=\"org-root/ls-api11\"\ncookie=\"{{outCookie}}\"\ninHierarchical=\"false\">\n</configResolveDn>\n",
+					"raw": "<configResolveDn\ndn=\"{{profile_dn}}\"\ncookie=\"{{outCookie}}\"\ninHierarchical=\"false\">\n</configResolveDn>\n",
 					"options": {
 						"raw": {
 							"language": "xml"
@@ -178,7 +240,35 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "<configResolveChildren\ncookie=\"{{outCookie}}\"\nclassId=\"vnicIpV4PooledAddr\"\ninDn=\"org-root/ls-api11\"\ninHierarchical=\"false\"\ninReturnCountOnly=\"false\">\n    <inFilter>\n    </inFilter>\n</configResolveChildren>",
+					"raw": "<configResolveChildren\ncookie=\"{{outCookie}}\"\nclassId=\"vnicIpV4PooledAddr\"\ninDn=\"{{profile_dn}}\"\ninHierarchical=\"false\"\ninReturnCountOnly=\"false\">\n    <inFilter>\n    </inFilter>\n</configResolveChildren>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{central_ip}}/xmlIM/central-mgr",
+					"protocol": "https",
+					"host": [
+						"{{central_ip}}"
+					],
+					"path": [
+						"xmlIM",
+						"central-mgr"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Management IP",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<configRefreshIdentity\ndn=\"{{profile_dn}}\"\ncookie=\"{{outCookie}}\"\ninIdType=\"ipV4\"\ninHierarchical=\"false\">\n</configRefreshIdentity>",
 					"options": {
 						"raw": {
 							"language": "xml"
